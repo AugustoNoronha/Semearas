@@ -1,0 +1,37 @@
+name: semearas
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-semearas}
+      POSTGRES_USER: ${POSTGRES_USER:-semearas}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Execute python3 scripts/setup_env.py}
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
+  api:
+    build: .
+    environment:
+      DATABASE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-semearas}
+      DATABASE_USER: ${POSTGRES_USER:-semearas}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:?Execute python3 scripts/setup_env.py}
+      JWT_SECRET: ${JWT_SECRET:?Execute python3 scripts/setup_env.py}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8082,http://localhost:8081,http://localhost:19006}
+    ports:
+      - "127.0.0.1:${API_PORT:-8080}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

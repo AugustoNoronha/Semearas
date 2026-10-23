@@ -1,0 +1,18 @@
+CREATE TABLE users (
+    id UUID PRIMARY KEY,
+    name VARCHAR(150) NOT NULL CHECK (length(trim(name)) >= 2),
+    email VARCHAR(254) NOT NULL UNIQUE CHECK (email = lower(trim(email))),
+    cpf VARCHAR(11) NOT NULL UNIQUE CHECK (cpf ~ '^[0-9]{11}$'),
+    role VARCHAR(5) NOT NULL DEFAULT 'USER' CHECK (role IN ('USER', 'ADMIN')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE auth (
+    user_id UUID PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+    password_hash VARCHAR(60) NOT NULL,
+    token_version BIGINT NOT NULL DEFAULT 0 CHECK (token_version >= 0),
+    last_login_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
