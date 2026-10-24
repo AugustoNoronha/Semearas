@@ -1,2 +1,7 @@
 import { AuthScreen } from '../components/AuthScreen';
-export default function Login() { return <AuthScreen mode="login" />; }
+import { Redirect } from 'expo-router';
+import { useAuth } from '../context/AuthContext';
+export default function Login() {
+  const { session } = useAuth();
+  return session ? <Redirect href="/meus-cadastros" /> : <AuthScreen mode="login" />;
+}

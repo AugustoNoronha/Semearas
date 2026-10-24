@@ -25,5 +25,6 @@ export function validateAuth(values: AuthValues, register: boolean): AuthErrors 
   if (register && !isValidCpf(values.cpf)) errors.cpf = 'Informe um CPF válido.';
   if (!values.password) errors.password = 'Informe sua senha.';
   else if (register && values.password.length < 8) errors.password = 'Use pelo menos 8 caracteres.';
+  else if (new TextEncoder().encode(values.password).length > 72) errors.password = 'A senha deve ter no máximo 72 bytes.';
   return errors;
 }

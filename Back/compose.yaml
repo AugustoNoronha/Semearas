@@ -25,9 +25,9 @@ services:
       DATABASE_USER: ${POSTGRES_USER:-semearas}
       DATABASE_PASSWORD: ${POSTGRES_PASSWORD:?Execute python3 scripts/setup_env.py}
       JWT_SECRET: ${JWT_SECRET:?Execute python3 scripts/setup_env.py}
-      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8082,http://localhost:8081,http://localhost:19006}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8082,http://localhost:8081,http://localhost:19006},http://127.0.0.1:8081,http://127.0.0.1:8082
     ports:
-      - "127.0.0.1:${API_PORT:-8080}:8080"
+      - "${API_BIND_HOST:-127.0.0.1}:${API_PORT:-8080}:8080"
     depends_on:
       postgres:
         condition: service_healthy

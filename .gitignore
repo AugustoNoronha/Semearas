@@ -1,0 +1,4 @@
+# Credenciais e configurações locais (em qualquer pasta)
+.env
+.env.*
+!.env.example

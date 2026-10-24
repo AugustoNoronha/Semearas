@@ -83,7 +83,7 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource(@Value("${app.cors.origins}") String origins) {
         var config = new CorsConfiguration();
         config.setAllowedOrigins(Arrays.stream(origins.split(",")).map(String::trim).toList());
-        config.setAllowedMethods(List.of("GET", "POST", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

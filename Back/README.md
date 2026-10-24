@@ -48,9 +48,11 @@ expostos apenas na interface local. Para alterar portas, edite `.env` e execute
 | --- | --- |
 | `users` | UUID, nome, e-mail único, CPF único sem máscara, `role` USER/ADMIN, datas |
 | `auth` | FK `user_id` (1:1), hash BCrypt, versão dos tokens, último login, datas |
+| `catalog_items` | Acervo privado de animais e materiais genéticos, vinculado ao usuário |
 
 `flyway_schema_history` é uma tabela técnica para controle das migrações.
 Migração inicial: `src/main/resources/db/migration/V1__create_users_and_auth.sql`.
+O acervo é criado por `V2__create_catalog_items.sql`, sem modificar a migração inicial.
 Altere o esquema em novas migrações, preservando as já aplicadas.
 
 E-mails são normalizados para minúsculas e CPFs têm máscara removida e dígitos
@@ -120,7 +122,67 @@ após expirar, faça login novamente. Rotacionar `JWT_SECRET` invalida tokens ex
 As demais rotas exigem autenticação. `/api/admin/**` exige `ADMIN`;
 ainda não há funcionalidades administrativas. CORS usa `CORS_ORIGINS` do `.env`.
 Adicione a origem do front se ele iniciar em outra porta.
-As telas do Front ainda não estão conectadas a esses endpoints.
+As telas do Front estão conectadas aos quatro endpoints. O front guarda o JWT,
+restaura a sessão consultando `/api/auth/me` e encerra o acesso após logout ou 401.
+Consulte `../Front/README.md` para configuração de URL em web, emulador e celular.
+
+## Cadastro de animais e material genético
+
+Todos os endpoints abaixo exigem Bearer JWT. O proprietário é obtido do token;
+não pode ser escolhido pelo cliente. Mesmo ADMIN só acessa seus próprios itens.
+Itens de outros usuários ou excluídos retornam 404.
+
+| Método | Rota | Resultado |
+| --- | --- | --- |
+| GET | `/api/items` | Lista paginada dos próprios cadastros |
+| GET | `/api/items/{id}` | Consulta um cadastro próprio |
+| POST | `/api/items` | Cria um cadastro (201) |
+| PUT | `/api/items/{id}` | Atualiza um cadastro próprio |
+| DELETE | `/api/items/{id}` | Exclusão lógica (204) |
+
+A listagem aceita `q` (nome, espécie ou raça), `category` (`ANIMAL` ou
+`GENETIC_MATERIAL`), `page` (a partir de 0) e `size` (1–100, padrão 20).
+Retorna `content`, `totalElements`, `page` e `size`.
+
+Exemplo de animal:
+
+```json
+{
+  "category": "ANIMAL",
+  "name": "Estrela do Campo",
+  "species": "Equino",
+  "breed": "Mangalarga Marchador",
+  "sex": "FEMALE",
+  "birthDate": "2020-01-15",
+  "city": "Belo Horizonte",
+  "state": "MG"
+}
+```
+
+Exemplo de material genético:
+
+```json
+{
+  "category": "GENETIC_MATERIAL",
+  "name": "Sêmen de Campeão do Vale",
+  "species": "Equino",
+  "geneticType": "SEMEN",
+  "sourceAnimal": "Campeão do Vale",
+  "quantity": 5
+}
+```
+
+Campos comuns obrigatórios: `category`, `name` e `species`. Opcionais: `breed`,
+`registryNumber`, `city`, `state` (UF brasileira), `description` (até 3000 caracteres).
+Animal exige `sex` (`MALE`, `FEMALE`, `GELDING` ou `UNKNOWN`) e pode ter `birthDate`.
+Material exige `geneticType` (`SEMEN`, `EMBRYO`, `OOCYTE`, `COVERING` ou `OTHER`) e
+`quantity` (inteiro de 1 a 1.000.000); `sourceAnimal` é opcional. Não envie campos
+específicos de animal no cadastro de material, nem o contrário. Nascimento futuro
+é recusado. PUT envia o cadastro completo, como POST.
+
+O vínculo representa o responsável pelo cadastro no SEMEARAS; não é uma
+certificação de propriedade ou registro em associação. Não há publicação para
+venda ou negociação neste MVP.
 
 ## Testes
 
@@ -131,11 +193,14 @@ Com a API ativa:
 
 ```sh
 python3 scripts/test_auth.py
+python3 scripts/test_catalog.py
 ```
 
 O teste HTTP verifica cadastro, validação, duplicidade, login, restrição de ADMIN,
 JWT, isolamento de usuários e logout contra o PostgreSQL real. Cria duas contas
 fictícias `@example.invalid` e exibe seus UUIDs para remoção opcional.
+O segundo script verifica CRUD, tipos, busca, filtros, paginação e bloqueio de
+acesso entre contas. Também cria duas contas fictícias e exibe seus UUIDs.
 
 ## Executar fora do Docker
 

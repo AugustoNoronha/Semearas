@@ -1,10 +1,12 @@
 import { Link } from 'expo-router';
 import Head from 'expo-router/head';
 import { useRef, useState } from 'react';
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from 'react-native';
+import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from 'react-native';
 import type { TextInputProps } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthErrors, AuthValues, formatCpf, validateAuth } from '../utils/validation';
+import { useAuth } from '../context/AuthContext';
+import { ApiError } from '../services/api';
 
 const green = '#244D3D';
 type InputRef = React.ComponentRef<typeof TextInput>;
@@ -32,21 +34,35 @@ export function AuthScreen({ mode }: { mode: 'login' | 'register' }) {
   const [values, setValues] = useState<AuthValues>({ name: '', email: '', cpf: '', password: '' });
   const [errors, setErrors] = useState<AuthErrors>({});
   const [submitted, setSubmitted] = useState(false);
-  const [notice, setNotice] = useState(false);
+  const [requestError, setRequestError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const submitting = useRef(false);
+  const { authenticate, message } = useAuth();
   const nameRef = useRef<InputRef>(null), emailRef = useRef<InputRef>(null), cpfRef = useRef<InputRef>(null), passwordRef = useRef<InputRef>(null);
 
   function change(key: keyof AuthValues, value: string) {
     const next = { ...values, [key]: key === 'cpf' ? formatCpf(value) : value };
-    setValues(next); setNotice(false);
+    setValues(next); setRequestError(null);
     if (submitted) setErrors(validateAuth(next, register));
   }
-  function submit() {
+  async function submit() {
+    if (submitting.current) return;
     const next = validateAuth(values, register);
-    setErrors(next); setSubmitted(true); setNotice(false);
+    setErrors(next); setSubmitted(true); setRequestError(null);
     const first = (['name', 'email', 'cpf', 'password'] as const).find(key => next[key]);
     if (first) { ({ name: nameRef, email: emailRef, cpf: cpfRef, password: passwordRef })[first].current?.focus(); return; }
-    // No credentials are persisted or sent until backend integration.
-    setNotice(true);
+    submitting.current = true; setBusy(true);
+    try { await authenticate(values, register); }
+    catch (error) {
+      setRequestError(error instanceof Error ? error.message : 'Não foi possível concluir. Tente novamente.');
+      if (error instanceof ApiError && error.fields) {
+        const nextErrors: AuthErrors = {};
+        for (const key of ['name', 'email', 'cpf', 'password'] as const) {
+          if (error.fields[key]) nextErrors[key] = error.fields[key];
+        }
+        setErrors(nextErrors);
+      }
+    } finally { submitting.current = false; setBusy(false); }
   }
 
   return <SafeAreaView style={s.safe}>
@@ -83,16 +99,15 @@ export function AuthScreen({ mode }: { mode: 'login' | 'register' }) {
               <Text accessibilityRole="header" style={s.title}>{register ? 'Plante um novo começo.' : 'Bem-vindo de volta.'}</Text>
               <Text style={s.subtitle}>{register ? 'Crie sua conta e faça parte do SEMEARAS.' : 'Entre na sua conta para continuar sua jornada.'}</Text>
               <View style={s.fields}>
-                {register && <Field label="Nome" testID="name" inputRef={nameRef} placeholder="Como você se chama?" value={values.name} onChangeText={v => change('name', v)} error={errors.name} autoComplete="name" autoCapitalize="words" returnKeyType="next" onSubmitEditing={() => emailRef.current?.focus()} />}
-                <Field label="E-mail" testID="email" inputRef={emailRef} placeholder="seuemail@exemplo.com" value={values.email} onChangeText={v => change('email', v)} error={errors.email} keyboardType="email-address" autoCapitalize="none" autoComplete="email" returnKeyType="next" onSubmitEditing={() => (register ? cpfRef : passwordRef).current?.focus()} />
-                {register && <Field label="CPF" testID="cpf" inputRef={cpfRef} placeholder="000.000.000-00" value={values.cpf} onChangeText={v => change('cpf', v)} error={errors.cpf} maxLength={14} keyboardType="number-pad" autoComplete="off" returnKeyType="next" onSubmitEditing={() => passwordRef.current?.focus()} />}
-                <Field label="Senha" testID="password" inputRef={passwordRef} password placeholder={register ? 'Crie uma senha segura' : 'Digite sua senha'} value={values.password} onChangeText={v => change('password', v)} error={errors.password} hint={register ? 'Use pelo menos 8 caracteres.' : undefined} autoCapitalize="none" autoComplete={register ? 'new-password' : 'current-password'} returnKeyType="done" onSubmitEditing={submit} />
+                {register && <Field label="Nome" testID="name" inputRef={nameRef} editable={!busy} placeholder="Como você se chama?" value={values.name} onChangeText={v => change('name', v)} error={errors.name} autoComplete="name" autoCapitalize="words" returnKeyType="next" onSubmitEditing={() => emailRef.current?.focus()} />}
+                <Field label="E-mail" testID="email" inputRef={emailRef} editable={!busy} placeholder="seuemail@exemplo.com" value={values.email} onChangeText={v => change('email', v)} error={errors.email} keyboardType="email-address" autoCapitalize="none" autoComplete="email" returnKeyType="next" onSubmitEditing={() => (register ? cpfRef : passwordRef).current?.focus()} />
+                {register && <Field label="CPF" testID="cpf" inputRef={cpfRef} editable={!busy} placeholder="000.000.000-00" value={values.cpf} onChangeText={v => change('cpf', v)} error={errors.cpf} maxLength={14} keyboardType="number-pad" autoComplete="off" returnKeyType="next" onSubmitEditing={() => passwordRef.current?.focus()} />}
+                <Field label="Senha" testID="password" inputRef={passwordRef} editable={!busy} password placeholder={register ? 'Crie uma senha segura' : 'Digite sua senha'} value={values.password} onChangeText={v => change('password', v)} error={errors.password} hint={register ? 'Use pelo menos 8 caracteres.' : undefined} autoCapitalize="none" autoComplete={register ? 'new-password' : 'current-password'} returnKeyType="done" onSubmitEditing={submit} />
               </View>
-              {notice && <View style={s.notice} accessibilityLiveRegion="polite" accessibilityRole="alert">
-                <Text style={s.noticeTitle}>Tudo certo com o preenchimento.</Text>
-                <Text style={s.noticeText}>O {register ? 'cadastro' : 'login'} estará disponível em breve. {register ? 'Sua conta ainda não foi criada.' : 'O acesso ainda não foi realizado.'}</Text>
+              {(requestError || message) && <View style={s.notice} accessibilityLiveRegion="polite" accessibilityRole="alert">
+                <Text style={requestError ? s.error : s.noticeText}>{requestError || message}</Text>
               </View>}
-              <Pressable accessibilityRole="button" onPress={submit} style={({ pressed }) => [s.submit, pressed && s.submitPressed]}><Text style={s.submitText}>{register ? 'Criar minha conta' : 'Entrar na minha conta'}</Text><Text style={s.arrow}>→</Text></Pressable>
+              <Pressable accessibilityRole="button" accessibilityState={{ disabled: busy, busy }} disabled={busy} onPress={() => { void submit(); }} style={({ pressed }) => [s.submit, pressed && s.submitPressed, busy && { opacity: 0.65 }]}><Text style={s.submitText}>{busy ? 'Aguarde...' : register ? 'Criar minha conta' : 'Entrar na minha conta'}</Text>{busy ? <ActivityIndicator color="#FFF" /> : <Text style={s.arrow}>→</Text>}</Pressable>
               <View style={s.switchRow}><Text style={s.switchText}>{register ? 'Já tem uma conta?' : 'Ainda não tem uma conta?'}</Text><Link href={register ? '/' : '/cadastro'} replace style={s.switchLink}>{register ? 'Entrar' : 'Cadastre-se'}</Link></View>
               <View style={s.formFooter}><View style={s.footerLine} /><Text style={s.footerText}>SEMEARAS · Cultivando possibilidades</Text><View style={s.footerLine} /></View>
             </View>
