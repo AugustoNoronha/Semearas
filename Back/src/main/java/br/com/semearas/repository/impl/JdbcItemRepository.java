@@ -1,27 +1,29 @@
-package br.com.semearas.catalog;
+package br.com.semearas.repository.impl;
 
-import br.com.semearas.catalog.CatalogItem.*;
+import br.com.semearas.dto.ItemPage;
+import br.com.semearas.dto.ItemRequest;
+import br.com.semearas.model.CatalogItem.*;
+import br.com.semearas.model.CatalogItem;
+import br.com.semearas.repository.ItemRepository;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ItemRepository {
+public class JdbcItemRepository implements ItemRepository {
     private final JdbcClient jdbc;
     private static final String FILTER = " owner_id = :owner AND deleted_at IS NULL "
             + "AND (:category = '' OR category = :category) "
             + "AND (name ILIKE :q OR species ILIKE :q OR COALESCE(breed, '') ILIKE :q)";
 
-    public ItemRepository(JdbcClient jdbc) { this.jdbc = jdbc; }
+    public JdbcItemRepository(JdbcClient jdbc) { this.jdbc = jdbc; }
 
-    public record ItemPage(List<CatalogItem> content, long totalElements, int page, int size) { }
-
+    @Override
     public ItemPage list(UUID owner, Category category, String query, int page, int size) {
         String type = category == null ? "" : category.name();
         String search = "%" + query.trim() + "%";
@@ -33,11 +35,13 @@ public class ItemRepository {
         return new ItemPage(items, total, page, size);
     }
 
+    @Override
     public Optional<CatalogItem> find(UUID owner, UUID id) {
         return jdbc.sql("SELECT * FROM catalog_items WHERE id = :id AND owner_id = :owner AND deleted_at IS NULL")
                 .param("id", id).param("owner", owner).query(this::map).optional();
     }
 
+    @Override
     public CatalogItem create(UUID owner, ItemRequest item) {
         UUID id = UUID.randomUUID();
         return parameters(jdbc.sql("""
@@ -48,6 +52,7 @@ public class ItemRepository {
                 """), owner, id, item).query(this::map).single();
     }
 
+    @Override
     public Optional<CatalogItem> update(UUID owner, UUID id, ItemRequest item) {
         return parameters(jdbc.sql("""
                 UPDATE catalog_items SET category = :category, name = :name, species = :species,
@@ -58,6 +63,7 @@ public class ItemRepository {
                 """), owner, id, item).query(this::map).optional();
     }
 
+    @Override
     public boolean delete(UUID owner, UUID id) {
         return jdbc.sql("UPDATE catalog_items SET deleted_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP "
                 + "WHERE id = :id AND owner_id = :owner AND deleted_at IS NULL")

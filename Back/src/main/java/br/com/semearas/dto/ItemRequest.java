@@ -1,6 +1,6 @@
-package br.com.semearas.catalog;
+package br.com.semearas.dto;
 
-import br.com.semearas.catalog.CatalogItem.*;
+import br.com.semearas.model.CatalogItem.*;
 import jakarta.validation.constraints.*;
 import java.time.LocalDate;
 import java.util.Locale;

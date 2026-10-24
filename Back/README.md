@@ -2,6 +2,27 @@
 
 Java 21, Spring Boot 4.1.1, Spring Security, JWT, PostgreSQL 17 e Flyway.
 
+## Organização do código
+
+Os pacotes ficam em `src/main/java/br/com/semearas`:
+
+```text
+controller/          Endpoints HTTP, validação das requisições e leitura do JWT
+services/            Interfaces dos serviços: AuthService, ItemService e TokenService
+services/impl/       Implementações das regras e dos fluxos de negócio
+repository/          Interfaces dos contratos de persistência
+repository/impl/     Implementações JDBC e consultas SQL
+dto/                 Requisições e respostas da API
+model/               Modelos e enums compartilhados
+config/              Segurança, configuração do Spring e tratamento de erros
+```
+
+O fluxo é `controller → services (interface) → repository (interface)`.
+O Spring resolve as implementações anotadas com `@Service` e `@Repository`,
+usando injeção por construtor. Controllers não acessam repositories diretamente.
+As operações de perfil e logout passam por `AuthService`; o tratamento de cadastro
+inexistente e as transações do acervo ficam em `ItemService`.
+
 ## Subir banco e API
 
 Requisito: Docker Desktop ativo. Java e Maven locais não são necessários.

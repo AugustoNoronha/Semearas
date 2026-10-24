@@ -1,4 +1,4 @@
-package br.com.semearas.user;
+package br.com.semearas.model;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;

@@ -1,4 +1,4 @@
-package br.com.semearas.auth;
+package br.com.semearas.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

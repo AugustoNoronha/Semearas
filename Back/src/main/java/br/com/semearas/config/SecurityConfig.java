@@ -1,6 +1,6 @@
 package br.com.semearas.config;
 
-import br.com.semearas.auth.AuthRepository;
+import br.com.semearas.repository.AuthRepository;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Arrays;

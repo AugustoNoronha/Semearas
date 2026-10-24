@@ -1,9 +1,10 @@
 package br.com.semearas.config;
 
-import br.com.semearas.auth.AuthRepository;
-import br.com.semearas.auth.TokenService;
-import br.com.semearas.user.UserProfile;
-import br.com.semearas.user.UserRole;
+import br.com.semearas.repository.AuthRepository;
+import br.com.semearas.model.AuthCredentials;
+import br.com.semearas.services.impl.JwtTokenService;
+import br.com.semearas.model.UserProfile;
+import br.com.semearas.model.UserRole;
 import java.time.OffsetDateTime;
 import java.time.Instant;
 import java.util.Optional;
@@ -33,11 +34,11 @@ class SecurityConfigTest {
         var key = config.jwtKey("test-only-secret-at-least-32-bytes-long");
         encoder = config.jwtEncoder(key);
         decoder = config.jwtDecoder(key, repository, "semearas");
-        when(repository.byId(id)).thenReturn(Optional.of(new AuthRepository.Credentials(id, "unused", 0, UserRole.USER)));
+        when(repository.byId(id)).thenReturn(Optional.of(new AuthCredentials(id, "unused", 0, UserRole.USER)));
     }
 
     private String token(String issuer, long ttl) {
-        return new TokenService(encoder, issuer, ttl).issue(user, 0).accessToken();
+        return new JwtTokenService(encoder, issuer, ttl).issue(user, 0).accessToken();
     }
 
     @Test
@@ -65,21 +66,21 @@ class SecurityConfigTest {
     @Test
     void rejectsWrongSignature() {
         var other = config.jwtEncoder(config.jwtKey("another-test-only-secret-at-least-32-bytes"));
-        String token = new TokenService(other, "semearas", 900).issue(user, 0).accessToken();
+        String token = new JwtTokenService(other, "semearas", 900).issue(user, 0).accessToken();
         assertThrows(JwtException.class, () -> decoder.decode(token));
     }
 
     @Test
     void rejectsRevokedTokens() {
         String token = token("semearas", 900);
-        when(repository.byId(id)).thenReturn(Optional.of(new AuthRepository.Credentials(id, "unused", 1, UserRole.USER)));
+        when(repository.byId(id)).thenReturn(Optional.of(new AuthCredentials(id, "unused", 1, UserRole.USER)));
         assertThrows(JwtException.class, () -> decoder.decode(token));
     }
 
     @Test
     void rejectsDeletedUsersAndChangedRoles() {
         String token = token("semearas", 900);
-        when(repository.byId(id)).thenReturn(Optional.of(new AuthRepository.Credentials(id, "unused", 0, UserRole.ADMIN)));
+        when(repository.byId(id)).thenReturn(Optional.of(new AuthCredentials(id, "unused", 0, UserRole.ADMIN)));
         assertThrows(JwtException.class, () -> decoder.decode(token));
         when(repository.byId(id)).thenReturn(Optional.empty());
         assertThrows(JwtException.class, () -> decoder.decode(token));

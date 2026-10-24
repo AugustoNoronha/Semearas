@@ -1,4 +1,4 @@
-package br.com.semearas.catalog;
+package br.com.semearas.model;
 
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
