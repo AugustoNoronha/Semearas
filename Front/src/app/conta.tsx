@@ -1,4 +1,5 @@
 import Head from 'expo-router/head';
+import { Brand } from '../components/Brand';
 import { Link } from 'expo-router';
 import { useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -23,7 +24,7 @@ export default function Account() {
     <Head><title>Minha conta | SEMEARAS</title></Head>
     <ScrollView contentContainerStyle={s.scroll}>
       <View style={s.card}>
-        <Text style={s.brand}>SEMEARAS</Text>
+        <Brand />
         <Link dismissTo href="/meus-cadastros" style={{ color: '#244D3D', marginTop: 24, paddingVertical: 8 }}>← Meus cadastros</Link>
         <Text style={s.eyebrow}>SEU ESPAÇO</Text>
         <Text accessibilityRole="header" style={s.title}>Olá, {user.name.split(' ')[0]}.</Text>

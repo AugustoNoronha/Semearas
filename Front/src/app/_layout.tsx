@@ -1,4 +1,5 @@
 import { Stack } from 'expo-router';
+import { Brand } from '../components/Brand';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native';
@@ -7,7 +8,7 @@ import { AuthProvider, useAuth } from '../context/AuthContext';
 function Navigation() {
   const { session, loading, restoreError, retry, discard } = useAuth();
   if (loading || restoreError) return <View style={styles.loading}>
-    <Text style={styles.brand}>SEMEARAS</Text>
+    <Brand />
     {loading ? <ActivityIndicator color="#244D3D" accessibilityLabel="Verificando sessão" /> : <>
       <Text style={styles.message}>{restoreError}</Text>
       <Pressable onPress={retry} accessibilityRole="button" style={styles.button}><Text>Tentar novamente</Text></Pressable>

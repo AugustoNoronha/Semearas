@@ -1,4 +1,5 @@
 import { Link } from 'expo-router';
+import { Brand, LivestockMark } from './Brand';
 import Head from 'expo-router/head';
 import { useRef, useState } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from 'react-native';
@@ -71,22 +72,17 @@ export function AuthScreen({ mode }: { mode: 'login' | 'register' }) {
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={s.scroll}>
         <View style={[s.shell, desktop && s.shellDesktop]}>
           <View style={[s.story, desktop ? s.storyDesktop : s.storyMobile]}>
-            <View style={s.brand}>
-              <View style={s.mark} accessibilityElementsHidden importantForAccessibility="no-hide-descendants"><View style={s.leaf} /><View style={[s.leaf, s.rightLeaf]} /><View style={s.stem} /></View>
-              <Text style={s.brandName}>SEMEARAS</Text>
-            </View>
+            <Brand light />
             {desktop && <>
               <View style={s.storyCopy}>
-                <Text style={s.eyebrow}>•  CADA COMEÇO É UMA SEMENTE</Text>
-                <Text style={s.storyTitle}>Grandes coisas{'\n'}começam com{'\n'}pequenos passos.</Text>
-                <Text style={s.storyDescription}>Um espaço para cultivar conexões{'\n'}e construir novas possibilidades.</Text>
+                <Text style={s.eyebrow}>EQUINOS · BOVINOS · GENÉTICA</Text>
+                <Text style={s.storyTitle}>Seu plantel.{'\n'}Sua história.{'\n'}Novas possibilidades.</Text>
+                <Text style={s.storyDescription}>Animais, genética e pessoas{'\n'}conectados pela mesma paixão.</Text>
               </View>
-              <View style={s.garden} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-                <View style={s.orbit} /><View style={[s.orbit, s.orbitSmall]} /><View style={s.gardenStem} />
-                <View style={[s.gardenLeaf, s.gardenLeafLeft]} /><View style={[s.gardenLeaf, s.gardenLeafRight]} />
-                <View style={[s.gardenLeaf, s.gardenLeafTop]} /><View style={s.soil} />
+              <View style={s.emblem} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+                <LivestockMark size={250} light seal />
               </View>
-              <Text style={s.storyFooter}>RAÍZES FORTES. NOVOS CAMINHOS.</Text>
+              <Text style={s.storyFooter}>TRADIÇÃO NO CAMPO. CONEXÕES PARA O FUTURO.</Text>
             </>}
           </View>
           <View style={[s.formPanel, desktop && s.formPanelDesktop]}>
@@ -96,7 +92,7 @@ export function AuthScreen({ mode }: { mode: 'login' | 'register' }) {
                 <Link href="/cadastro" replace asChild><Pressable accessibilityRole="link" accessibilityState={{ selected: register }} style={StyleSheet.flatten([s.tab, register && s.tabActive])}><Text style={[s.tabText, register && s.tabTextActive]}>Criar conta</Text></Pressable></Link>
               </View>
               <Text style={s.formEyebrow}>{register ? 'VAMOS COMEÇAR' : 'BOM TER VOCÊ AQUI'}</Text>
-              <Text accessibilityRole="header" style={s.title}>{register ? 'Plante um novo começo.' : 'Bem-vindo de volta.'}</Text>
+              <Text accessibilityRole="header" style={s.title}>{register ? 'Seu próximo capítulo.' : 'Bem-vindo de volta.'}</Text>
               <Text style={s.subtitle}>{register ? 'Crie sua conta e faça parte do SEMEARAS.' : 'Entre na sua conta para continuar sua jornada.'}</Text>
               <View style={s.fields}>
                 {register && <Field label="Nome" testID="name" inputRef={nameRef} editable={!busy} placeholder="Como você se chama?" value={values.name} onChangeText={v => change('name', v)} error={errors.name} autoComplete="name" autoCapitalize="words" returnKeyType="next" onSubmitEditing={() => emailRef.current?.focus()} />}
@@ -109,7 +105,7 @@ export function AuthScreen({ mode }: { mode: 'login' | 'register' }) {
               </View>}
               <Pressable accessibilityRole="button" accessibilityState={{ disabled: busy, busy }} disabled={busy} onPress={() => { void submit(); }} style={({ pressed }) => [s.submit, pressed && s.submitPressed, busy && { opacity: 0.65 }]}><Text style={s.submitText}>{busy ? 'Aguarde...' : register ? 'Criar minha conta' : 'Entrar na minha conta'}</Text>{busy ? <ActivityIndicator color="#FFF" /> : <Text style={s.arrow}>→</Text>}</Pressable>
               <View style={s.switchRow}><Text style={s.switchText}>{register ? 'Já tem uma conta?' : 'Ainda não tem uma conta?'}</Text><Link href={register ? '/' : '/cadastro'} replace style={s.switchLink}>{register ? 'Entrar' : 'Cadastre-se'}</Link></View>
-              <View style={s.formFooter}><View style={s.footerLine} /><Text style={s.footerText}>SEMEARAS · Cultivando possibilidades</Text><View style={s.footerLine} /></View>
+              <View style={s.formFooter}><View style={s.footerLine} /><Text style={s.footerText}>SEMEARAS · Animais, genética e conexões</Text><View style={s.footerLine} /></View>
             </View>
           </View>
         </View>
@@ -121,12 +117,10 @@ export function AuthScreen({ mode }: { mode: 'login' | 'register' }) {
 const s = StyleSheet.create({
   flex: { flex: 1 }, safe: { flex: 1, backgroundColor: '#FAF9F6' }, scroll: { flexGrow: 1 }, shell: { flex: 1 }, shellDesktop: { flexDirection: 'row', minHeight: 780 },
   story: { backgroundColor: green }, storyDesktop: { width: '44%', paddingHorizontal: 48, paddingTop: 42, paddingBottom: 30, overflow: 'hidden', minHeight: 780 }, storyMobile: { paddingHorizontal: 24, paddingVertical: 24 },
-  brand: { flexDirection: 'row', alignItems: 'center', gap: 12 }, brandName: { color: '#F6F6E9', fontSize: 21, fontWeight: '700', letterSpacing: 3.5 },
-  mark: { width: 32, height: 36 }, leaf: { position: 'absolute', width: 15, height: 21, borderTopLeftRadius: 18, borderBottomRightRadius: 18, top: 3, left: 1, backgroundColor: '#D5E2B7', transform: [{ rotate: '-12deg' }] }, rightLeaf: { left: 17, top: 0, backgroundColor: '#9CBF92', transform: [{ rotate: '80deg' }] }, stem: { position: 'absolute', width: 2, height: 20, left: 16, top: 16, backgroundColor: '#D5E2B7', transform: [{ rotate: '5deg' }] },
   storyCopy: { marginTop: 83, zIndex: 1 }, eyebrow: { color: '#C7D6AC', letterSpacing: 1.5, fontSize: 10, fontWeight: '600' },
-  storyTitle: { fontSize: 46, lineHeight: 56, fontWeight: '400', letterSpacing: -1.5, color: '#FCF9EE', marginTop: 23, fontFamily: Platform.OS === 'ios' ? 'Georgia' : Platform.OS === 'web' ? 'Georgia, serif' : 'serif' }, storyDescription: { color: '#CFDCD0', lineHeight: 25, fontSize: 15, marginTop: 22 },
-  garden: { height: 236, marginTop: 24, alignItems: 'center', justifyContent: 'flex-end' }, orbit: { position: 'absolute', width: 285, height: 285, borderRadius: 150, borderWidth: 1, borderColor: '#42644F', top: 4 }, orbitSmall: { width: 225, height: 225, top: 34 }, gardenStem: { height: 142, width: 3, backgroundColor: '#BFCF9B', position: 'absolute', bottom: 0 },
-  gardenLeaf: { width: 95, height: 49, position: 'absolute', backgroundColor: '#8EAE7B', borderTopLeftRadius: 65, borderBottomRightRadius: 65 }, gardenLeafLeft: { bottom: 68, marginLeft: -91, transform: [{ rotate: '25deg' }] }, gardenLeafRight: { bottom: 103, marginLeft: 91, backgroundColor: '#D4DEB1', transform: [{ rotate: '-25deg' }, { scaleX: -1 }] }, gardenLeafTop: { bottom: 153, width: 66, height: 35, marginLeft: -61, backgroundColor: '#A8C194', transform: [{ rotate: '40deg' }] }, soil: { width: 210, height: 1, backgroundColor: '#78906C' }, storyFooter: { marginTop: 28, color: '#BCCBB4', fontSize: 9, letterSpacing: 2, textAlign: 'center' },
+  storyTitle: { fontSize: 42, lineHeight: 52, fontWeight: '400', letterSpacing: -1.5, color: '#FCF9EE', marginTop: 23, fontFamily: Platform.OS === 'ios' ? 'Georgia' : Platform.OS === 'web' ? 'Georgia, serif' : 'serif' }, storyDescription: { color: '#CFDCD0', lineHeight: 25, fontSize: 15, marginTop: 22 },
+  emblem: { height: 260, marginTop: 20, alignItems: 'center', justifyContent: 'center' },
+  storyFooter: { marginTop: 18, color: '#D3C3A0', fontSize: 9, letterSpacing: 1.5, textAlign: 'center' },
   formPanel: { flex: 1, paddingHorizontal: 24, paddingTop: 32, paddingBottom: 28, justifyContent: 'center', alignItems: 'center' }, formPanelDesktop: { paddingHorizontal: 48, paddingVertical: 44 }, form: { width: '100%', maxWidth: 420 }, tabs: { flexDirection: 'row', backgroundColor: '#EDEFE8', borderRadius: 10, padding: 4, marginBottom: 37 }, tab: { flex: 1, minHeight: 42, alignItems: 'center', justifyContent: 'center', borderRadius: 7 }, tabActive: { backgroundColor: '#FFFFFF', boxShadow: '0 1px 4px #213C2110' }, tabText: { color: '#6D7469', fontSize: 14, fontWeight: '500' }, tabTextActive: { color: green, fontWeight: '700' },
   formEyebrow: { fontSize: 10, letterSpacing: 2, fontWeight: '700', color: '#6A825C', marginBottom: 11 }, title: { fontSize: 30, lineHeight: 38, letterSpacing: -0.9, color: '#203E30', fontWeight: '600' }, subtitle: { color: '#71786D', fontSize: 14, lineHeight: 22, marginTop: 9 }, fields: { gap: 19, marginTop: 30 }, field: { gap: 7 }, label: { fontSize: 13, fontWeight: '600', color: '#343F32' },
   inputBox: { minHeight: 51, borderWidth: 1, borderColor: '#DADFD4', borderRadius: 8, backgroundColor: '#FFFFFF', flexDirection: 'row', alignItems: 'center' }, inputFocused: { borderColor: '#557B47', boxShadow: '0 0 0 3px #557B4718' }, inputError: { borderColor: '#B44736' }, input: { flex: 1, minWidth: 0, paddingHorizontal: 14, paddingVertical: 15, fontSize: 14, color: '#263C2C', outlineWidth: 0 }, showPassword: { minHeight: 48, justifyContent: 'center', paddingHorizontal: 12 }, showText: { fontSize: 11, color: green, fontWeight: '600' }, hint: { fontSize: 11, color: '#777E71' }, error: { color: '#A23728', fontSize: 12, lineHeight: 18 },

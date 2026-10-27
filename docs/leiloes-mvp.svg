@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="1190" viewBox="0 0 1440 1190" role="img" aria-labelledby="title desc">
+<title id="title">SEMEARAS — Fluxo proposto de leilões</title><desc id="desc">ADMIN cria evento e aprova lotes autorizados pelos donos. Comprador se inscreve. Horários controlam a futura fase de lances.</desc>
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="#687466"/></marker></defs>
+<rect width="100%" height="100%" fill="#FAF9F6"/>
+<text x="40" y="50" font-family="Arial, sans-serif" font-size="28" fill="#244D3D" font-weight="700">SEMEARAS | Proposta de funcionamento</text>
+<text x="40" y="79" font-family="Arial, sans-serif" font-size="16" fill="#687466">Organização centralizada no ADMIN; autorização do proprietário; inscrição do comprador.</text>
+<text x="40" y="120" font-family="Arial, sans-serif" font-size="12" fill="#244D3D" font-weight="700">ADMIN — ORGANIZA O EVENTO</text>
+<text x="530" y="120" font-family="Arial, sans-serif" font-size="12" fill="#244D3D" font-weight="700">PROPRIETÁRIO — COMPARTILHA O ITEM</text>
+<text x="1020" y="120" font-family="Arial, sans-serif" font-size="12" fill="#244D3D" font-weight="700">COMPRADOR — SOLICITA PARTICIPAÇÃO</text>
+<polyline points="410,215.0 530,215.0" fill="none" stroke="#687466" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="408.2" y="183.0" width="123.60000000000001" height="19" fill="#FAF9F6"/>
+<text x="414.2" y="197.0" font-family="Arial, sans-serif" font-size="12" fill="#687466">compartilha código</text>
+<polyline points="715.0,290 715.0,340" fill="none" stroke="#687466" stroke-width="1.5" marker-end="url(#arrow)"/>
+<polyline points="530,415.0 410,415.0" fill="none" stroke="#687466" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="395.8" y="383.0" width="148.4" height="19" fill="#FAF9F6"/>
+<text x="401.8" y="397.0" font-family="Arial, sans-serif" font-size="12" fill="#687466">submete para aprovação</text>
+<polyline points="225.0,490 225.0,540" fill="none" stroke="#687466" stroke-width="1.5" marker-end="url(#arrow)"/>
+<polyline points="410,615.0 530,615.0" fill="none" stroke="#687466" stroke-width="1.5" marker-end="url(#arrow)"/>
+<polyline points="900,615.0 1020,615.0" fill="none" stroke="#687466" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="907.5" y="583.0" width="105.0" height="19" fill="#FAF9F6"/>
+<text x="913.5" y="597.0" font-family="Arial, sans-serif" font-size="12" fill="#687466">abre inscrições</text>
+<polyline points="1205.0,690 1205,740 225,740 225.0,790" fill="none" stroke="#687466" stroke-width="1.5" marker-end="url(#arrow)"/>
+<rect x="191.1" y="708" width="67.80000000000001" height="19" fill="#FAF9F6"/>
+<text x="197.1" y="722" font-family="Arial, sans-serif" font-size="12" fill="#687466">avaliação</text>
+<polyline points="410,865.0 530,865.0" fill="none" stroke="#687466" stroke-width="1.5" marker-end="url(#arrow)"/>
+<polyline points="900,865.0 1020,865.0" fill="none" stroke="#687466" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="6 5"/>
+<rect x="873.4" y="833.0" width="173.20000000000002" height="19" fill="#FAF9F6"/>
+<text x="879.4" y="847.0" font-family="Arial, sans-serif" font-size="12" fill="#687466">quando habilitarmos lances</text>
+<polyline points="1205.0,940 1205,1070 900,1070.0" fill="none" stroke="#687466" stroke-width="1.5" marker-end="url(#arrow)" stroke-dasharray="6 5"/>
+<rect x="1161.8" y="1038" width="86.4" height="19" fill="#FAF9F6"/>
+<text x="1167.8" y="1052" font-family="Arial, sans-serif" font-size="12" fill="#687466">encerramento</text>
+<rect x="40" y="140" width="370" height="150" rx="12" fill="#FFFFFF" stroke="#B9C8B4"/>
+<text x="58" y="170" font-family="Arial, sans-serif" font-size="17" fill="#244D3D" font-weight="700">1. Criar leilão</text>
+<text x="58" y="202" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Código único • título • início e fim</text>
+<text x="58" y="223" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Evento começa como RASCUNHO.</text>
+<rect x="530" y="140" width="370" height="150" rx="12" fill="#FFFFFF" stroke="#B9C8B4"/>
+<text x="548" y="170" font-family="Arial, sans-serif" font-size="17" fill="#244D3D" font-weight="700">2. Receber código do evento</text>
+<text x="548" y="202" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Consulta a identificação do leilão.</text>
+<text x="548" y="223" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Seu acervo permanece privado.</text>
+<rect x="530" y="340" width="370" height="150" rx="12" fill="#FFFFFF" stroke="#B9C8B4"/>
+<text x="548" y="370" font-family="Arial, sans-serif" font-size="17" fill="#244D3D" font-weight="700">3. Autorizar um item próprio</text>
+<text x="548" y="402" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Seleciona animal ou material genético.</text>
+<text x="548" y="423" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Cria lote PROPOSTO para aquele evento.</text>
+<rect x="40" y="340" width="370" height="150" rx="12" fill="#FFFFFF" stroke="#B9C8B4"/>
+<text x="58" y="370" font-family="Arial, sans-serif" font-size="17" fill="#244D3D" font-weight="700">4. Aprovar lote e condições</text>
+<text x="58" y="402" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Abertura e incremento autorizados.</text>
+<text x="58" y="423" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Item + vendedor + quantidade definidos.</text>
+<rect x="40" y="540" width="370" height="150" rx="12" fill="#FFFFFF" stroke="#B9C8B4"/>
+<text x="58" y="570" font-family="Arial, sans-serif" font-size="17" fill="#244D3D" font-weight="700">5. Publicar e agendar</text>
+<text x="58" y="602" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Ao menos um lote aprovado.</text>
+<text x="58" y="623" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Datas e condições ficam congeladas.</text>
+<rect x="530" y="540" width="370" height="150" rx="12" fill="#FFFFFF" stroke="#B9C8B4"/>
+<text x="548" y="570" font-family="Arial, sans-serif" font-size="17" fill="#244D3D" font-weight="700">Dados da oferta preservados</text>
+<text x="548" y="602" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Snapshot preserva a oferta aprovada.</text>
+<text x="548" y="623" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Sem alterações enquanto comprometido.</text>
+<rect x="1020" y="540" width="370" height="150" rx="12" fill="#FFFFFF" stroke="#B9C8B4"/>
+<text x="1038" y="570" font-family="Arial, sans-serif" font-size="17" fill="#244D3D" font-weight="700">6. Solicitar inscrição</text>
+<text x="1038" y="602" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Usuário autenticado aceita as condições.</text>
+<text x="1038" y="623" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Uma inscrição por usuário e evento.</text>
+<rect x="40" y="790" width="370" height="150" rx="12" fill="#FFFFFF" stroke="#B9C8B4"/>
+<text x="58" y="820" font-family="Arial, sans-serif" font-size="17" fill="#244D3D" font-weight="700">7. Aprovar inscrição</text>
+<text x="58" y="852" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">PENDENTE → APROVADA / RECUSADA.</text>
+<text x="58" y="873" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Proposta: decisão antes do início.</text>
+<rect x="530" y="790" width="370" height="150" rx="12" fill="#FFFFFF" stroke="#B9C8B4"/>
+<text x="548" y="820" font-family="Arial, sans-serif" font-size="17" fill="#244D3D" font-weight="700">8. Respeitar a janela do evento</text>
+<text x="548" y="852" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Início ≤ horário do servidor &lt; fim.</text>
+<text x="548" y="873" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Fim fixo, sem prorrogação no MVP.</text>
+<rect x="1020" y="790" width="370" height="150" rx="12" fill="#FFF9ED" stroke="#B9C8B4" stroke-dasharray="7 4"/>
+<text x="1038" y="820" font-family="Arial, sans-serif" font-size="17" fill="#244D3D" font-weight="700">Fase seguinte: disputar lotes</text>
+<text x="1038" y="852" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Somente inscrito aprovado.</text>
+<text x="1038" y="873" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Não pode lançar no próprio item.</text>
+<rect x="530" y="1010" width="370" height="120" rx="12" fill="#FFF9ED" stroke="#B9C8B4" stroke-dasharray="7 4"/>
+<text x="548" y="1040" font-family="Arial, sans-serif" font-size="17" fill="#244D3D" font-weight="700">Resultado por lote — fase seguinte</text>
+<text x="548" y="1072" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">ARREMATADO ou SEM_LANCES.</text>
+<text x="548" y="1093" font-family="Arial, sans-serif" font-size="14" fill="#253C2E">Pagamento e transferência vêm depois.</text>
+</svg>

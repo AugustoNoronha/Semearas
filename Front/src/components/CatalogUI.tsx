@@ -1,4 +1,5 @@
 import { Link } from 'expo-router';
+import { Brand } from './Brand';
 import type { PropsWithChildren } from 'react';
 import { ActivityIndicator, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View, useWindowDimensions } from 'react-native';
 import type { TextInputProps } from 'react-native';
@@ -13,11 +14,11 @@ export function CatalogLayout({ children }: PropsWithChildren) {
       <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={ui.scroll}>
         <View style={[ui.container, wide && { paddingHorizontal: 40 }]}>
           <View style={ui.header}>
-            <Link dismissTo href="/meus-cadastros" style={ui.brand}>SEMEARAS</Link>
+            <Link dismissTo href="/meus-cadastros" asChild><Pressable accessibilityRole="link" accessibilityLabel="SEMEARAS — Meus cadastros"><Brand /></Pressable></Link>
             <View style={ui.nav}><Link dismissTo href="/meus-cadastros" style={ui.navLink}>Meus cadastros</Link><Link href="/conta" style={ui.navLink}>Minha conta</Link></View>
           </View>
           {children}
-          <Text style={ui.footer}>SEMEARAS · Cultivando possibilidades</Text>
+          <Text style={ui.footer}>SEMEARAS · Animais, genética e conexões</Text>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
